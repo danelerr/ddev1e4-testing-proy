@@ -1,0 +1,130 @@
+<!DOCTYPE html>
+<html class="no-js" lang="en">
+<head>
+    <meta charset="utf-8">
+    <title>Miembros</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+
+    <!-- CSS
+    ================================================== -->
+    <link rel="stylesheet" href="css/base.css">
+    <link rel="stylesheet" href="css/main.css">
+    <link href="/node_modules/bootstrap/dist/css/bootstrap.min.css" rel="stylesheet">
+</head>
+
+<body id="top">
+    <header class="page-header">
+        <div class="header-logo">
+            <a class="site-logo" href="index.html">
+                <img src="images/logo.svg" alt="Homepage">
+            </a>
+        </div>
+        <nav class="header-nav-wrap">
+            <ul class="header-nav">
+                <li class="current"><a class="text-decoration-none"  href="/">Inicio</a></li>
+                <li><a class="text-decoration-none" href="PMiembros" >Miembros</a></li>
+                <li><a class="text-decoration-none" href="PFamiliares">Familiares</a></li>
+                <li><a class="text-decoration-none" href="PMinisterios" >Ministerios</a></li>
+                <li><a class="text-decoration-none" href="PBautizos" >Bautizos</a></li>	
+                <li><a class="text-decoration-none" href="PMatrimonios" >Matrimonios</a></li>	
+            </ul>
+        </nav>
+    </header>
+
+    <div class="p-5">
+        <div class="row w-100">
+            <div class="col-md-4 p-5 rounded-5 shadow-lg" style="background-color: rgb(241, 241, 241);">
+                <div>
+                    <h2>Registrar Nuevo Miembro</h2>
+                    <form name="contactForm" method="post" action="/NMiembros">
+                        <fieldset class="p-3">
+                            <div class="form-field">
+                                <label for="nombres" class="form-label mt-3">Nombres</label>
+                                <input name="nombres" class="h-full-width" placeholder="Juan Andres" type="text" style="height: 35px; padding: 5px;">
+                            </div>
+                            <div class="form-field">
+                                <label for="apellidos" class="form-label mt-3">Apellidos</label>
+                                <input name="apellidos" class="h-full-width" placeholder="Perez Gomez" type="text" style="height: 35px; padding: 5px;">
+                            </div>
+                            <div class="form-field">
+                                <label for="sexo" class="form-label mt-3">Sexo</label>
+                                <select name="sexo" class="h-full-width" style="height: 35px; padding: 5px; font-size: 16px;">
+                                    <option value="" selected>Seleccionar sexo</option>
+                                    <option value="M">Masculino</option>
+                                    <option value="F">Femenino</option>
+                                </select>
+                            </div>
+                            <div class="form-field">
+                                <label for="fecha_nacimiento" class="form-label mt-3">Fecha de Nacimiento</label>
+                                <input name="fecha_nacimiento" class="h-full-width" style="height: 45px; font-size: 16px;" type="date" style="height: 35px; padding: 5px;">
+                            </div>
+                            <div class="form-field">
+                                <label for="estado_civil" class="form-label mt-3">Estado Civil</label>
+                                <select name="estado_civil" class="h-full-width" style="height: 35px; padding: 5px; font-size: 16px;">
+                                    <option value="" selected>Seleccionar Estado Civil</option>
+                                    <option value="S">Soltero</option>
+                                    <option value="C">Casado</option>
+                                    <option value="V">Viudo</option>
+                                </select>
+                            </div>
+                            <div class="form-field">
+                                <label for="ci" class="form-label mt-3">Carnet de Identidad</label>
+                                <input name="ci" class="h-full-width" placeholder="012345678" type="number" style="height: 35px; padding: 5px;">
+                            </div>
+                            <div class="form-field">
+                                <label for="domicilio" class="form-label mt-3">Domicilio</label>
+                                <input name="domicilio" class="h-full-width" placeholder="Avenida Banzer C/5" type="text" style="height: 35px; padding: 5px;">
+                            </div>
+                            <div class="form-field">
+                                <label for="celular" class="form-label mt-3">Celular</label>
+                                <input name="celular" class="h-full-width" placeholder="71234567" type="number" style="height: 35px; padding: 5px;">
+                            </div>
+                            <br>
+                            <input name="submit" class="btn btn--primary h-full-width" value="Registrar" type="submit">
+                        </fieldset>
+                    </form>
+                </div>
+            </div>
+            <div class="col-md-8 p-5">
+                <table id="tablaMiembros" class="table table-striped shadow-lg" style="font-size: 14px;">
+                    <thead>
+                        <tr>
+                            <th scope="col">ID</th>
+                            <th scope="col">NOMBRES Y APELLIDOS</th>
+                            <th scope="col">ACCIONES</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <% miembros.forEach(function(miembro) { %>
+                            <tr>
+                                <td><%= miembro.id %></td>
+                                <td><%= miembro.nombres %></td>
+                                <td class="p-0">
+                                    <form method="post" action="/editarMiembro"></form>
+                                        <input type="hidden" name="id" value="<%= miembro.id %>">
+                                        <button type="submit" class="btn btn-primary" style="background-image: url('images/edit.png'); 
+                                        width: 25px; height: 25px; background-size: cover;"></button>
+                                    </form>
+                                    <form method="post" action="/eliminarMiembro">
+                                        <input type="hidden" name="id" value="<%= miembro.id %>">
+                                        <button type="submit" class="btn" style="background-image: url('images/delete.png'); 
+                                        width: 25px; height: 25px; background-size: cover;"></button>
+                                    </form>
+                                </td>
+                            </tr>
+                        <% }); %>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+    <footer class="s-footer">
+        <div class="row footer-bottom">
+            <div class="column ss-copyright">
+                <span>© Copyright 2024</span> 
+                <span>Design by <a class="text-decoration-none" href="https://wa.me/+59175346050/">Carlos Laime</a></span>
+            </div>
+        </div> 
+    </footer>
+    <script src="/negocio/NMiembros.js"></script>
+</body>
