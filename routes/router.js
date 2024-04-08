@@ -60,11 +60,21 @@ router.get('/PBautizos', (req, res) => {
                         break;
                     }
                 }
-            }            
-            res.render('PBautizos', { bautizos: bautizos });
+            }   
+            res.render('PBautizos', { bautizos: bautizos, personas: miembros});
+            
         });
         
     });
+});
+
+router.post('/NBautizos', (req,res)=>{
+    NegocioBautizo.registrarBautizo(req,res,(error)=>{
+        if(error){
+            return res.status(500).send('Error al registrar el bautizo');
+        }   
+    });
+    res.redirect('/PBautizos');
 });
 
 router.post('/eliminarBautizo', (req,res)=>{

@@ -13,7 +13,15 @@ const obtenerBautizos = (callback) => {
             callback(null, bautizos);
         }
     });
-};
+}
+
+const registrarBautizo = (req,res, callback)=>{
+    nuevoBautizo = {
+        fecha: req.body.fecha,
+        miembro_id: req.body.miembro_id,
+    };
+    DBautizos.registrarBautizo(nuevoBautizo, callback);
+}
 
 const eliminarBautizo = (req,res, callback) =>{
     idBautizo = req.body.id;
@@ -33,5 +41,6 @@ function formatoFecha(fecha) {
 
 module.exports = {
     obtenerBautizos: obtenerBautizos,
-    eliminarBautizo: eliminarBautizo
+    eliminarBautizo: eliminarBautizo,
+    registrarBautizo: registrarBautizo
 }

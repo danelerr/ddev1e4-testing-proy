@@ -39,12 +39,17 @@
                     <form name="contactForm" method="post" action="/NBautizos">
                         <fieldset class="p-3">
                             <div class="form-field">
-                                <label for="nombres" class="form-label mt-3">Nombres</label>
-                                <input name="nombres" class="h-full-width" placeholder="Juan Andres" type="text" style="height: 35px; padding: 5px;">
+                                <label for="miembro_id" class="form-label mt-3">Nombres</label>
+                                <select name="miembro_id" class="h-full-width" style="height: 35px; padding: 5px; font-size: 16px;">
+                                   <option value="" selected>Seleccionar Persona</option>
+                                    <% personas.forEach(persona => { %>
+                                        <option value="<%= persona.id %>"><%= persona.nombres || 9%></option>
+                                    <% }); %>
+                                </select>
                             </div>
                             <div class="form-field">
-                                <label for="fecha_nacimiento" class="form-label mt-3">Fecha Celebrada: </label>
-                                <input name="fecha_nacimiento" class="h-full-width" style="height: 45px; font-size: 16px;" type="date" style="height: 35px; padding: 5px;">
+                                <label for="fecha" class="form-label mt-3">Fecha Celebrada: </label>
+                                <input name="fecha" class="h-full-width" style="height: 45px; font-size: 16px;" type="date" style="height: 35px; padding: 5px;">
                             </div>
                             <br>
                             <input name="submit" class="btn btn--primary h-full-width" value="Registrar" type="submit">

@@ -21,6 +21,17 @@ class DBautizo{
         });
     }
 
+    static registrarBautizo(nuevoBautizo){
+        const queryString = 'INSERT INTO bautizos SET?';
+        conexion.connection.query(queryString,nuevoBautizo,(error, results)=>{
+            if (error) {
+                console.error('Error al insertar datos: ', error);
+                return;
+              }
+              console.log('Datos insertados correctamente: ', results);
+        })
+    }
+
     static eliminarBautizo(idBautizo){
         const queryString = 'DELETE FROM bautizos WHERE id = ?';
         conexion.connection.query(queryString,[idBautizo],(error, results) =>{
@@ -35,5 +46,6 @@ class DBautizo{
 
 module.exports = {
     obtenerBautizos: DBautizo.obtenerBautizos,
-    eliminarBautizo: DBautizo.eliminarBautizo
+    eliminarBautizo: DBautizo.eliminarBautizo,
+    registrarBautizo: DBautizo.registrarBautizo
 }
