@@ -19,7 +19,6 @@ class DMiembro{
         const queryString = "SELECT id, CONCAT(nombres, ' ', apellidos) AS nombres FROM miembros ORDER BY id DESC";
         conexion.connection.query(queryString, (error, results) => {
             if (error) {
-                console.log('Error al obtener los datos:', error);
                 callback(error, null);
                 return
             } else {
@@ -32,10 +31,8 @@ class DMiembro{
         const queryString = 'INSERT INTO miembros SET?';
         conexion.connection.query(queryString,nuevoMiembro,(error, results)=>{
             if (error) {
-                console.error('Error al insertar datos: ', error);
                 return;
               }
-              console.log('Datos insertados correctamente: ', results);
         })
     }
     
@@ -43,16 +40,53 @@ class DMiembro{
         const queryString = 'DELETE FROM miembros WHERE id = ?';
         conexion.connection.query(queryString,[idMiembro],(error, results) =>{
             if(error){
-                console.log('Error al eliminar el miembro con id:' + idMiembro, error);
                 return;
             }
-            console.log('miembro eliminado correctamente: ', results);
         })
+    }
+
+    static obtenerHombres(callback){
+        const queryString = "select id, CONCAT(nombres, ' ', apellidos) AS nombres from miembros where sexo = 'M'"
+        conexion.connection.query(queryString, (error, results) => {
+            if (error) {
+                callback(error, null);
+                return
+            } else {
+                callback(null, results);
+            }
+        });
+    }
+
+    static obtenerMujeres(callback){
+        const queryString = "select id, CONCAT(nombres, ' ', apellidos) AS nombres from miembros where sexo = 'F'"
+        conexion.connection.query(queryString, (error, results) => {
+            if (error) {
+                callback(error, null);
+                return
+            } else {
+                callback(null, results);
+            }
+        });
+    }
+
+    static obtenerNombre(idMiembro, callback){
+        const queryString = "select CONCAT(nombres, ' ', apellidos) AS nombres from miembros where id = ?"
+        conexion.connection.query(queryString, [idMiembro],(error, results) => {
+            if (error) {
+                callback(error, null);
+                return
+            } else {
+                callback(null, results);
+            }
+        });
     }
 }
 
 module.exports = {
     obtenerMiembros: DMiembro.obtenerMiembros,
     registrarMiembro: DMiembro.registrarMiembro,
-    eliminarMiembro: DMiembro.eliminarMiembro
+    eliminarMiembro: DMiembro.eliminarMiembro,
+    obtenerHombres: DMiembro.obtenerHombres,
+    obtenerMujeres: DMiembro.obtenerMujeres,
+    obtenerNombre: DMiembro.obtenerNombre
 }

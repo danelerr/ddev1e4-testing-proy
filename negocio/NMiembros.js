@@ -31,10 +31,47 @@ const eliminarMiembro = (req,res, callback) =>{
     DMiembros.eliminarMiembro(idMiembro, callback);
 }
 
+const obtenerHombres= (callback) =>{
+    DMiembros.obtenerHombres((error, hombres) => {
+        if (error) {
+            callback(error, null);
+            return;
+        } else {
+            callback(null, hombres);
+        }
+    });
+}
+
+const obtenerMujeres= (callback) =>{
+    DMiembros.obtenerMujeres((error, mujeres) => {
+        if (error) {
+            callback(error, null);
+            return;
+        } else {
+            callback(null, mujeres);
+        }
+    });
+}
+
+const obtenerNombre = (idMiembro, callback) => {
+    DMiembros.obtenerNombre(idMiembro, (error, results) => {
+        if (error) {
+            callback(error, null);
+            return;
+        } else {
+            const nombre = results[0] ? results[0].nombres : null;
+            callback(null, nombre);
+        }
+    });
+}
+
 module.exports = {
     obtenerMiembros: obtenerMiembros,
     registrarMiembro: registrarMiembro,
-    eliminarMiembro: eliminarMiembro
+    eliminarMiembro: eliminarMiembro,
+    obtenerHombres: obtenerHombres,
+    obtenerMujeres: obtenerMujeres,
+    obtenerNombre: obtenerNombre
 }
 
 
