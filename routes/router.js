@@ -6,6 +6,8 @@ const path = require('path')
 const NegocioMiembro = require('../negocio/NMiembros');
 const NegocioBautizo = require('../negocio/NBautizos');
 const NegocioMatrimonio = require('../negocio/NMatrimonio');
+const NegocioCargo = require('../negocio/NCargos');
+const NegocioMinisterio = require('../negocio/NMinisterio');
 //ENRUTAMIENTO DE VISTAS 
 router.get('/', (req, res)=>{
     res.render('welcomePage');
@@ -143,5 +145,65 @@ router.post('/eliminarMatrimonio', (req,res)=>{
     })
     res.redirect('/PMatrimonios');
 });
+
+//============================== CARGOS  =================================
+
+router.get('/PCargos',(req, res)=>{
+    NegocioCargo.obtenerCargos((error,cargos)=>{
+        if (error){
+            return res.status(500).send('Error al obtener los miembros');
+        }
+        cargos.forEach((cargo, index) => {
+            NegocioMiembro.obtenerNombre(cargo.miembro_id, (error, nombre) => {
+                if (error) {
+                    res.status(500).send('Error al obtener el nombre de los miembros');
+                    return;
+                }
+                cargos[index].nombreMiembro = nombre;
+            });
+        })
+        
+        cargos.forEach((cargo, index) => {
+            NegocioMinisterio.obtenerMinisterio(cargo.ministerio_id, (error, ministerio) => {
+                if (error) {
+                    res.status(500).send('Error al obtener el nombre de los ministerios');
+                    return;
+                }
+                cargos[index].nombreMinisterio = ministerio;
+            });
+        })
+
+        NegocioMiembro.obtenerMiembros((error,miembros)=>{
+            if (error){
+                return res.status(500).send('Error al obtener los miembros');
+            }
+            NegocioMinisterio.obtenerMinisterios((error,ministerios)=>{
+                if(error){
+                    return res.status(500).send('Error al obtener los ministerios');
+                }
+                res.render('PCargos', {cargos: cargos, miembros: miembros, ministerios: ministerios});
+            })
+        });
+    });
+});
+
+router.post('/NCargos', (req,res)=>{
+    NegocioCargo.registrarCargo(req,res,(error)=>{
+        if(error){
+            return res.status(500).send('Error al registrar el cargo');
+        }   
+    });
+    res.redirect('/PCargos');
+});
+
+router.post('/darDeBaja', (req,res)=>{
+    NegocioCargo.darDeBaja(req,res,(error)=>{
+        if(error){
+            return res.status(500).send('Error al dar de baja el cargo');
+        }   
+    })
+    res.redirect('/PCargos');
+});
+
 
 module.exports = router

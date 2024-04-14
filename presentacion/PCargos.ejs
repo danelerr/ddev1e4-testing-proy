@@ -2,7 +2,7 @@
 <html class="no-js" lang="en">
 <head>
     <meta charset="utf-8">
-    <title>Matrimonios</title>
+    <title>Cargos</title>
     <meta name="viewport" content="width=device-width, initial-scale=1">
 
     <!-- CSS
@@ -35,30 +35,26 @@
         <div class="row w-100">
             <div class="col-md-4 p-5 rounded-5 shadow-lg" style="background-color: rgb(241, 241, 241);">
                 <div>
-                    <h2>Registrar Nuevo Matrimonio</h2>
-                    <form name="contactForm" method="post" action="/NMatrimonios">
+                    <h2>Registrar Nuevo Cargo</h2>
+                    <form name="contactForm" method="post" action="/NCargos">
                         <fieldset class="p-3">
                             <div class="form-field">
-                                <label for="novio_id" class="form-label mt-3">Nombre del Novio:</label>
-                                <select name="novio_id" class="h-full-width" style="height: 35px; padding: 5px; font-size: 16px;">
-                                   <option value="" selected>Seleccionar Persona</option>
-                                    <% hombres.forEach(hombre => { %>
-                                        <option value="<%= hombre.id %>"><%= hombre.nombres %></option>
+                                <label for="miembro_id" class="form-label mt-3">Persona: </label>
+                                <select name="miembro_id" class="h-full-width" style="height: 35px; padding: 5px; font-size: 16px;">
+                                    <option value="" selected>Seleccionar Persona</option>
+                                    <% miembros.forEach(miembro => { %>
+                                        <option value="<%= miembro.id %>"><%= miembro.nombres || 9%></option>
                                     <% }); %>
                                 </select>
                             </div>
                             <div class="form-field">
-                                <label for="novia_id" class="form-label mt-3">Nombre de la Novia:</label>
-                                <select name="novia_id" class="h-full-width" style="height: 35px; padding: 5px; font-size: 16px;">
-                                   <option value="" selected>Seleccionar Persona</option>
-                                    <% mujeres.forEach(mujer => { %>
-                                        <option value="<%= mujer.id %>"><%= mujer.nombres %></option>
+                                <label for="ministerio_id" class="form-label mt-3">Ministerio: </label>
+                                <select name="ministerio_id" class="h-full-width" style="height: 35px; padding: 5px; font-size: 16px;">
+                                    <option value="" selected>Seleccionar Ministerio</option>
+                                    <% ministerios.forEach(ministerio => { %>
+                                        <option value="<%= ministerio.id %>"><%= ministerio.nombre || 9%></option>
                                     <% }); %>
-                                </select>
-                            </div>
-                            <div class="form-field">
-                                <label for="fecha" class="form-label mt-3">Fecha Celebrada: </label>
-                                <input name="fecha" class="h-full-width" style="height: 45px; font-size: 16px;" type="date" style="height: 35px; padding: 5px;">
+                                 </select>
                             </div>
                             <br>
                             <input name="submit" class="btn btn--primary h-full-width" value="Registrar" type="submit">
@@ -71,22 +67,22 @@
                     <thead>
                         <tr>
                             <th scope="col">ID</th>
-                            <th scope="col">NOVIO</th>
-                            <th scope="col">NOVIA</th>
-                            <th scope="col">FECHA</th>
+                            <th scope="col">NOMBRES Y APELLIDOS</th>
+                            <th scope="col">MINISTERIO</th>
+                            <th scope="col">FECHA INICIO</th>
                             <th scope="col">ACCIONES</th>
                         </tr>
                     </thead>
                     <tbody>
-                        <% matrimonios.forEach(function(matrimonio) { %>
+                        <% cargos.forEach(function(cargo) { %>
                             <tr>
-                                <td><%= matrimonio.id %></td>
-                                <td><%= matrimonio.nombreNovio %></td>
-                                <td><%= matrimonio.nombreNovia %></td>
-                                <td><%= matrimonio.fecha %></td>
+                                <td><%= cargo.id %></td>
+                                <td><%= cargo.nombreMiembro %></td>
+                                <td><%= cargo.nombreMinisterio %></td>
+                                <td><%= cargo.fecha_inicio %></td>
                                 <td class="">
-                                    <form method="post" action="/eliminarMatrimonio">
-                                        <input type="hidden" name="id" value="<%= matrimonio.id %>">
+                                    <form method="post" action="/darDeBaja">
+                                        <input type="hidden" name="id" value="<%= cargo.id %>">
                                         <button type="submit" class="btn" style="background-image: url('images/delete.png'); 
                                         width: 25px; height: 25px; background-size: cover;"></button>
                                     </form>
