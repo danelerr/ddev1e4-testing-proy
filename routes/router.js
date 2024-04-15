@@ -8,6 +8,8 @@ const NegocioBautizo = require('../negocio/NBautizos');
 const NegocioMatrimonio = require('../negocio/NMatrimonio');
 const NegocioCargo = require('../negocio/NCargos');
 const NegocioMinisterio = require('../negocio/NMinisterio');
+const NegocioRelacion = require('../negocio/NRelaciones');
+const NegocioParentesco = require('../negocio/NParentesco');
 //ENRUTAMIENTO DE VISTAS 
 router.get('/', (req, res)=>{
     res.render('welcomePage');
@@ -203,6 +205,67 @@ router.post('/darDeBaja', (req,res)=>{
         }   
     })
     res.redirect('/PCargos');
+});
+
+//============================== RELACIONES =================================
+
+router.get('/PRelaciones',(req,res)=>{
+    NegocioRelacion.obtenerRelaciones((error,relaciones)=>{
+        if (error){
+            return res.status(500).send('Error al obtener las relaciones');
+        }
+        relaciones.forEach((relacion) => {
+            NegocioMiembro.obtenerNombre(relacion.primer_miembro_id, (error, nombre) => {
+                if (error) {
+                    res.status(500).send('Error al obtener el nombre del primer miembro');
+                    return;
+                }
+                relacion.nombrePrimerMiembro = nombre;
+            });
+        })
+
+        relaciones.forEach((relacion) => {
+            NegocioMiembro.obtenerNombre(relacion.segundo_miembro_id, (error, nombre) => {
+                if (error) {
+                    res.status(500).send('Error al obtener el nombre del segundo miembro');
+                    return;
+                }
+                relacion.nombreSegundoMiembro = nombre;
+            });
+        })
+
+        relaciones.forEach((relacion) => {
+            NegocioParentesco.obtenerParentesco(relacion.parentesco_id, (error, parentesco) => {
+                if (error) {
+                    res.status(500).send('Error al obtener el nombre de los parentescos');
+                    return;
+                }
+                relacion.tipoParentesco = parentesco;
+            });
+        })
+
+        NegocioMiembro.obtenerMiembros((error,miembros)=>{
+            if (error){
+                return res.status(500).send('Error al obtener los miembros');
+            }
+            NegocioParentesco.obtenerParentescos((error,parentescos)=>{
+                if(error){
+                    return res.status(500).send('Error al obtener los parentescos');
+                }
+                res.render('PRelaciones', {relaciones: relaciones, miembros: miembros, parentescos: parentescos});
+            })
+            
+        });
+    });
+})
+
+router.post('/NRelaciones', (req,res)=>{
+    NegocioRelacion.registrarRelacion(req,res,(error)=>{
+        if(error){
+            return res.status(500).send('Error al registrar la relación');
+        }
+    });
+    res.redirect('/PRelaciones');
 });
 
 module.exports = router

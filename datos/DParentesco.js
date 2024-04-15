@@ -8,7 +8,7 @@ class DParentesco{
     }
 
     static obtenerParentescos(callback) {
-        const queryString = "SELECT * FROM parentesco ORDER BY id DESC";
+        const queryString = "SELECT * FROM parentesco";
         conexion.connection.query(queryString, (error, results) => {
             if (error) {
                 callback(error, null);
@@ -19,9 +19,9 @@ class DParentesco{
         });
     }
 
-    static obtenerParentesco(callback) {
-        const queryString = "SELECT tipo_parentesco FROM parentesco";
-        conexion.connection.query(queryString, (error, results) => {
+    static obtenerParentesco(idTipo, callback) {
+        const queryString = "SELECT * FROM parentesco where id = ?";
+        conexion.connection.query(queryString,[idTipo],(error, results) => {
             if (error) {
                 callback(error, null);
                 return

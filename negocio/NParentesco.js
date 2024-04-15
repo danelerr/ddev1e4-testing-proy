@@ -13,12 +13,13 @@ class NParentesco{
         });
     }
 
-    static obtenerTipoParentescos = (callback) => {
-        DParentesco.obtenerParentesco((error, tipo) => {
+    static obtenerTipoParentescos = (idTipo, callback) => {
+        DParentesco.obtenerParentesco(idTipo, (error, results) => {
             if (error) {
                 callback(error, null);
                 return;
             } else {
+                const tipo = results[0].tipo_parentesco
                 callback(null, tipo);
             }
         });

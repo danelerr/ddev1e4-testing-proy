@@ -2,7 +2,7 @@
 <html class="no-js" lang="en">
 <head>
     <meta charset="utf-8">
-    <title>Matrimonios</title>
+    <title>Relaciones</title>
     <meta name="viewport" content="width=device-width, initial-scale=1">
 
     <!-- CSS
@@ -35,30 +35,35 @@
         <div class="row w-100">
             <div class="col-md-4 p-5 rounded-5 shadow-lg" style="background-color: rgb(241, 241, 241);">
                 <div>
-                    <h2>Registrar Nuevo Matrimonio</h2>
-                    <form name="contactForm" method="post" action="/NMatrimonios">
+                    <h2>Registrar Nueva Relación</h2>
+                    <form name="contactForm" method="post" action="/NRelaciones">
                         <fieldset class="p-3">
                             <div class="form-field">
-                                <label for="novio_id" class="form-label mt-3">Nombre del Novio:</label>
-                                <select name="novio_id" class="h-full-width" style="height: 35px; padding: 5px; font-size: 16px;">
-                                   <option value="" selected>Seleccionar Persona</option>
-                                    <% hombres.forEach(hombre => { %>
-                                        <option value="<%= hombre.id %>"><%= hombre.nombres %></option>
+                                <label for="primer_miembro_id" class="form-label mt-3">Persona 1: </label>
+                                <select name="primer_miembro_id" class="h-full-width" style="height: 35px; padding: 5px; font-size: 16px;">
+                                    <option value="" selected>Seleccionar Persona</option>
+                                    <% miembros.forEach(miembro => { %>
+                                        <option value="<%= miembro.id %>"><%= miembro.nombres || 9%></option>
                                     <% }); %>
                                 </select>
                             </div>
                             <div class="form-field">
-                                <label for="novia_id" class="form-label mt-3">Nombre de la Novia:</label>
-                                <select name="novia_id" class="h-full-width" style="height: 35px; padding: 5px; font-size: 16px;">
-                                   <option value="" selected>Seleccionar Persona</option>
-                                    <% mujeres.forEach(mujer => { %>
-                                        <option value="<%= mujer.id %>"><%= mujer.nombres %></option>
+                                <label for="segundo_miembro_id" class="form-label mt-3">Persona 2: </label>
+                                <select name="segundo_miembro_id" class="h-full-width" style="height: 35px; padding: 5px; font-size: 16px;">
+                                    <option value="" selected>Seleccionar Persona</option>
+                                    <% miembros.forEach(miembro => { %>
+                                        <option value="<%= miembro.id %>"><%= miembro.nombres || 9%></option>
                                     <% }); %>
                                 </select>
                             </div>
                             <div class="form-field">
-                                <label for="fecha" class="form-label mt-3">Fecha Celebrada: </label>
-                                <input name="fecha" class="h-full-width" style="height: 45px; font-size: 16px;" type="date" style="height: 35px; padding: 5px;">
+                                <label for="parentesco_id" class="form-label mt-3">Parentesco: </label>
+                                <select name="parentesco_id" class="h-full-width" style="height: 35px; padding: 5px; font-size: 16px;">
+                                    <option value="" selected>Seleccionar Parentesco</option>
+                                    <% parentescos.forEach(parentesco => { %>
+                                        <option value="<%= parentesco.id %>"><%= parentesco.tipo_parentesco || 9%></option>
+                                    <% }); %>
+                                 </select>
                             </div>
                             <br>
                             <input name="submit" class="btn btn--primary h-full-width" value="Registrar" type="submit">
@@ -70,27 +75,17 @@
                 <table id="tablaMiembros" class="table table-striped shadow-lg" style="font-size: 14px;">
                     <thead>
                         <tr>
-                            <th scope="col">ID</th>
-                            <th scope="col">NOVIO</th>
-                            <th scope="col">NOVIA</th>
-                            <th scope="col">FECHA</th>
-                            <th scope="col">ACCIONES</th>
+                            <th scope="col">MIEMBRO 1</th>
+                            <th scope="col">MIEMBRO 2</th>
+                            <th scope="col">PARENTESCO</th>
                         </tr>
                     </thead>
                     <tbody>
-                        <% matrimonios.forEach(function(matrimonio) { %>
+                        <% relaciones.forEach(function(relacion) { %>
                             <tr>
-                                <td><%= matrimonio.id %></td>
-                                <td><%= matrimonio.nombreNovio %></td>
-                                <td><%= matrimonio.nombreNovia %></td>
-                                <td><%= matrimonio.fecha %></td>
-                                <td class="">
-                                    <form method="post" action="/eliminarMatrimonio">
-                                        <input type="hidden" name="id" value="<%= matrimonio.id %>">
-                                        <button type="submit" class="btn" style="background-image: url('images/delete.png'); 
-                                        width: 25px; height: 25px; background-size: cover;"></button>
-                                    </form>
-                                </td>
+                                <td><%= relacion.nombrePrimerMiembro %></td>
+                                <td><%= relacion.nombreSegundoMiembro %></td>
+                                <td><%= relacion.tipoParentesco %></td>
                             </tr>
                         <% }); %>
                     </tbody>
