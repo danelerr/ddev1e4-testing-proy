@@ -205,5 +205,4 @@ router.post('/darDeBaja', (req,res)=>{
     res.redirect('/PCargos');
 });
 
-
 module.exports = router
