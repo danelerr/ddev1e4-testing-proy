@@ -5,7 +5,7 @@ const PORT = process.env.PORT || 3000;
 
 app.use(express.static('public'));
 app.use('/node_modules', express.static(path.join(__dirname, 'node_modules')));
-//app.use(express.static('presentacion'));
+app.use('/negocio',express.static(path.join(__dirname, 'negocio')));
 
 app.set('view engine', 'ejs');
 app.set('views', path.join(__dirname, 'presentacion'));

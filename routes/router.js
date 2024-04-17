@@ -21,7 +21,7 @@ router.get('/PMiembros',(req, res)=>{
         if (error){
             return res.status(500).send('Error al obtener los miembros');
         }
-        res.render('PMiembros',{miembros: miembros});
+        res.render('PMiembros',{NMiembros: miembros});
     });
 });
 

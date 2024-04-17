@@ -97,15 +97,15 @@
                         </tr>
                     </thead>
                     <tbody>
-                        <% miembros.forEach(function(miembro) { %>
+                        <% NMiembros.forEach(function get(NMiembro) { %>
                             <tr>
-                                <td><%= miembro.id %></td>
-                                <td><%= miembro.nombres %></td>
-                                <td><%= miembro.celular %></td>
-                                <td><%= miembro.domicilio %></td>
+                                <td><%= NMiembro.id %></td>
+                                <td><%= NMiembro.nombres %></td>
+                                <td><%= NMiembro.celular %></td>
+                                <td><%= NMiembro.domicilio %></td>
                                 <td class="p-0">
                                     <form method="post" action="/eliminarMiembro">
-                                        <input type="hidden" name="id" value="<%= miembro.id %>">
+                                        <input type="hidden" name="id" value="<%= NMiembro.id %>">
                                         <button type="submit" class="btn" style="background-image: url('images/delete.png'); 
                                         width: 25px; height: 25px; background-size: cover;"></button>
                                     </form>
@@ -125,4 +125,5 @@
             </div>
         </div> 
     </footer>
+    <script src="/negocio/NMiembros.js"></script>
 </body>
