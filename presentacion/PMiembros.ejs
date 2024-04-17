@@ -91,6 +91,8 @@
                         <tr>
                             <th scope="col">ID</th>
                             <th scope="col">NOMBRES Y APELLIDOS</th>
+                            <th scope="col">CELULAR</th>
+                            <th scope="col">DOMICILIO</th>
                             <th scope="col">ACCIONES</th>
                         </tr>
                     </thead>
@@ -99,12 +101,9 @@
                             <tr>
                                 <td><%= miembro.id %></td>
                                 <td><%= miembro.nombres %></td>
+                                <td><%= miembro.celular %></td>
+                                <td><%= miembro.domicilio %></td>
                                 <td class="p-0">
-                                    <form method="post" action="/editarMiembro"></form>
-                                        <input type="hidden" name="id" value="<%= miembro.id %>">
-                                        <button type="submit" class="btn btn-primary" style="background-image: url('images/edit.png'); 
-                                        width: 25px; height: 25px; background-size: cover;"></button>
-                                    </form>
                                     <form method="post" action="/eliminarMiembro">
                                         <input type="hidden" name="id" value="<%= miembro.id %>">
                                         <button type="submit" class="btn" style="background-image: url('images/delete.png'); 

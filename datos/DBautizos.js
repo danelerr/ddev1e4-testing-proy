@@ -2,11 +2,10 @@ const conexion = require('../datos/conexion')
 conexion.crearConexion();
 
 class DBautizo{
-    constructor(id, fecha, miembro_id, padre_id){
+    constructor(id, fecha, miembro_id){
         this.id = id;
         this.fecha = fecha;
         this.miembro_id = miembro_id;
-        this.padre_id = padre_id;
     }
 
     static obtenerBautizos(callback) {

@@ -8,7 +8,6 @@ class DMiembro{
         this.apellidos = apellidos;
         this.sexo = sexo;
         this.fecha_nacimiento = fecha_nacimiento;
-        this.fecha_nacimiento
         this.estado_civil = estado_civil;
         this.ci = ci;
         this.domicilio = domicilio;
@@ -16,7 +15,7 @@ class DMiembro{
     }
 
     static obtenerMiembros(callback) {
-        const queryString = "SELECT id, CONCAT(nombres, ' ', apellidos) AS nombres FROM miembros ORDER BY id DESC";
+        const queryString = "SELECT id, celular, domicilio, CONCAT(nombres, ' ', apellidos) AS nombres FROM miembros ORDER BY id DESC";
         conexion.connection.query(queryString, (error, results) => {
             if (error) {
                 callback(error, null);
