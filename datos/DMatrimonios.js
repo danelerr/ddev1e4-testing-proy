@@ -21,26 +21,30 @@ class DMatrimonio{
         });
     }
 
-    static registrarMatrimonio(nuevoMatrimonio){
+    static registrarMatrimonio(nuevoMatrimonio, callback){
         const queryString = 'INSERT INTO matrimonios SET?';
-        conexion.connection.query(queryString,nuevoMatrimonio,(error, results)=>{
+        conexion.connection.query(queryString, nuevoMatrimonio, (error, results) => {
             if (error) {
                 console.error('Error al insertar datos: ', error);
-                return;
-              }
-              console.log('Datos insertados correctamente: ', results);
-        })
-    }
-
-    static eliminarMatrimonio(idMatrimonio){
-        const queryString = 'DELETE FROM matrimonios WHERE id = ?';
-        conexion.connection.query(queryString,[idMatrimonio],(error, results) =>{
-            if(error){
-                console.log('Error al eliminar el matrimonio: ', error);
+                if (callback) callback(error);
                 return;
             }
-            console.log('matrimonio eliminado correctamente: ', results);
-        })
+            console.log('Datos insertados correctamente: ', results);
+            if (callback) callback(null);
+        });
+    }
+
+    static eliminarMatrimonio(idMatrimonio, callback){
+        const queryString = 'DELETE FROM matrimonios WHERE id = ?';
+        conexion.connection.query(queryString, [idMatrimonio], (error, results) => {
+            if (error) {
+                console.log('Error al eliminar el matrimonio: ', error);
+                if (callback) callback(error);
+                return;
+            }
+            console.log('Matrimonio eliminado correctamente: ', results);
+            if (callback) callback(null);
+        });
     }
 }
 

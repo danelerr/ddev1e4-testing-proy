@@ -1,9 +1,12 @@
 const DMatrimonios = require('../datos/DMatrimonios');
 
-class NMatrimonios{
+class NMatrimonios {
+    constructor(matrimoniosDAO = DMatrimonios) {
+        this.matrimoniosDAO = matrimoniosDAO;
+    }
 
-    static obtenerMatrimonios = (callback) => {
-        DMatrimonios.obtenerMatrimonios((error, matrimonios) => {
+    obtenerMatrimonios(callback) {
+        this.matrimoniosDAO.obtenerMatrimonios((error, matrimonios) => {
             if (error) {
                 callback(error, null);
                 return;
@@ -16,21 +19,15 @@ class NMatrimonios{
         });
     }
     
-    static registrarMatrimonio = (req,res, callback)=>{
-        const nuevoMatrimonio = {
-            fecha: req.body.fecha,
-            novio_id: req.body.novio_id,
-            novia_id: req.body.novia_id
-        };
-        DMatrimonios.registrarMatrimonio(nuevoMatrimonio, callback);
+    registrarMatrimonio(datosMatrimonio, callback) {
+        this.matrimoniosDAO.registrarMatrimonio(datosMatrimonio, callback);
     }
     
-    static eliminarMatrimonio = (req,res, callback) =>{
-        const idMatrimonio = req.body.id;
-        DMatrimonios.eliminarMatrimonio(idMatrimonio, callback);
+    eliminarMatrimonio(idMatrimonio, callback) {
+        this.matrimoniosDAO.eliminarMatrimonio(idMatrimonio, callback);
     }
     
-    static formatoFecha(fecha) {
+    formatoFecha(fecha) {
         const dia = fecha.getDate();
         const mes = fecha.getMonth() + 1; 
         const anio = fecha.getFullYear();
@@ -42,8 +39,12 @@ class NMatrimonios{
     }
 }
 
+// Instancia por defecto para mantener compatibilidad
+const matrimoniosNegocio = new NMatrimonios();
+
 module.exports = {
-    obtenerMatrimonios: NMatrimonios.obtenerMatrimonios,
-    eliminarMatrimonio: NMatrimonios.eliminarMatrimonio,
-    registrarMatrimonio: NMatrimonios.registrarMatrimonio
+    NMatrimonios,
+    obtenerMatrimonios: (callback) => matrimoniosNegocio.obtenerMatrimonios(callback),
+    registrarMatrimonio: (datosMatrimonio, callback) => matrimoniosNegocio.registrarMatrimonio(datosMatrimonio, callback),
+    eliminarMatrimonio: (idMatrimonio, callback) => matrimoniosNegocio.eliminarMatrimonio(idMatrimonio, callback)
 }

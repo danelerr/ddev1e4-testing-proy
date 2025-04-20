@@ -1,9 +1,12 @@
 const DBautizos = require('../datos/DBautizos');
 
-class NBautizos{
+class NBautizos {
+    constructor(bautizosDAO = DBautizos) {
+        this.bautizosDAO = bautizosDAO;
+    }
     
-    static obtenerBautizos = (callback) => {
-        DBautizos.obtenerBautizos((error, bautizos) => {
+    obtenerBautizos(callback) {
+        this.bautizosDAO.obtenerBautizos((error, bautizos) => {
             if (error) {
                 callback(error, null);
                 return;
@@ -16,20 +19,15 @@ class NBautizos{
         });
     }
     
-    static registrarBautizo = (req,res, callback)=>{
-        const nuevoBautizo = {
-            fecha: req.body.fecha,
-            miembro_id: req.body.miembro_id,
-        };
-        DBautizos.registrarBautizo(nuevoBautizo, callback);
+    registrarBautizo(datosBautizo, callback) {
+        this.bautizosDAO.registrarBautizo(datosBautizo, callback);
     }
     
-    static eliminarBautizo = (req,res, callback) =>{
-        const idBautizo = req.body.id;
-        DBautizos.eliminarBautizo(idBautizo, callback);
+    eliminarBautizo(idBautizo, callback) {
+        this.bautizosDAO.eliminarBautizo(idBautizo, callback);
     }
     
-    static formatoFecha(fecha) {
+    formatoFecha(fecha) {
         const dia = fecha.getDate();
         const mes = fecha.getMonth() + 1; 
         const anio = fecha.getFullYear();
@@ -39,11 +37,14 @@ class NBautizos{
     
         return `${diaStr}/${mesStr}/${anio}`;
     }
-    
 }
 
+// Instancia por defecto para mantener compatibilidad
+const bautizosNegocio = new NBautizos();
+
 module.exports = {
-    obtenerBautizos: NBautizos.obtenerBautizos,
-    eliminarBautizo: NBautizos.eliminarBautizo,
-    registrarBautizo: NBautizos.registrarBautizo
+    NBautizos,
+    obtenerBautizos: (callback) => bautizosNegocio.obtenerBautizos(callback),
+    registrarBautizo: (datosBautizo, callback) => bautizosNegocio.registrarBautizo(datosBautizo, callback),
+    eliminarBautizo: (idBautizo, callback) => bautizosNegocio.eliminarBautizo(idBautizo, callback)
 }

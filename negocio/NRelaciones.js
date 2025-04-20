@@ -1,9 +1,12 @@
 const DRelaciones = require('../datos/DRelaciones');
 
-class NRelaciones{
+class NRelaciones {
+    constructor(relacionesDAO = DRelaciones) {
+        this.relacionesDAO = relacionesDAO;
+    }
 
-    static obtenerRelaciones = (callback) => {
-        DRelaciones.obtenerRelaciones((error, relaciones) => {
+    obtenerRelaciones(callback) {
+        this.relacionesDAO.obtenerRelaciones((error, relaciones) => {
             if (error) {
                 callback(error, null);
                 return;
@@ -13,17 +16,16 @@ class NRelaciones{
         });
     }
 
-    static registrarRelacion = (req,res, callback)=>{
-        const nuevaRelacion = {
-            primer_miembro_id: req.body.primer_miembro_id,
-            segundo_miembro_id: req.body.segundo_miembro_id,
-            parentesco_id: req.body.parentesco_id
-        };
-        DRelaciones.registrarRelacion(nuevaRelacion, callback);
+    registrarRelacion(datosRelacion, callback) {
+        this.relacionesDAO.registrarRelacion(datosRelacion, callback);
     }
 }
 
+// Instancia por defecto para mantener compatibilidad
+const relacionesNegocio = new NRelaciones();
+
 module.exports = {
-    obtenerRelaciones: NRelaciones.obtenerRelaciones,
-    registrarRelacion: NRelaciones.registrarRelacion
+    NRelaciones,
+    obtenerRelaciones: (callback) => relacionesNegocio.obtenerRelaciones(callback),
+    registrarRelacion: (datosRelacion, callback) => relacionesNegocio.registrarRelacion(datosRelacion, callback)
 }

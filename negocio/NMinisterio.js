@@ -1,8 +1,12 @@
 const DMinisterios = require("../datos/DMinisterios");
 
-class NMinisterios{
-    static obtenerMinisterios = (callback) => {
-        DMinisterios.obtenerMinisterios((error, ministerios) => {
+class NMinisterios {
+    constructor(ministeriosDAO = DMinisterios) {
+        this.ministeriosDAO = ministeriosDAO;
+    }
+
+    obtenerMinisterios(callback) {
+        this.ministeriosDAO.obtenerMinisterios((error, ministerios) => {
             if (error) {
                 callback(error, null);
                 return;
@@ -12,8 +16,8 @@ class NMinisterios{
         });
     }
     
-    static obtenerMinisterio = (idMinisterio, callback) => {
-        DMinisterios.obtenerMinisterio(idMinisterio, (error, results) => {
+    obtenerMinisterio(idMinisterio, callback) {
+        this.ministeriosDAO.obtenerMinisterio(idMinisterio, (error, results) => {
             if (error) {
                 callback(error, null);
                 return;
@@ -25,7 +29,11 @@ class NMinisterios{
     }
 }
 
+// Instancia por defecto para mantener compatibilidad
+const ministeriosNegocio = new NMinisterios();
+
 module.exports = {
-    obtenerMinisterios: NMinisterios.obtenerMinisterios,
-    obtenerMinisterio: NMinisterios.obtenerMinisterio
+    NMinisterios,
+    obtenerMinisterios: (callback) => ministeriosNegocio.obtenerMinisterios(callback),
+    obtenerMinisterio: (idMinisterio, callback) => ministeriosNegocio.obtenerMinisterio(idMinisterio, callback)
 }

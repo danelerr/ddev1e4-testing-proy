@@ -1,9 +1,12 @@
 const DCargos = require('../datos/DCargos');
 
-class NCargos{
+class NCargos {
+    constructor(cargosDAO = DCargos) {
+        this.cargosDAO = cargosDAO;
+    }
 
-    static obtenerCargos = (callback) => {
-        DCargos.obtenerCargos((error, cargos) => {
+    obtenerCargos(callback) {
+        this.cargosDAO.obtenerCargos((error, cargos) => {
             if (error) {
                 callback(error, null);
                 return;
@@ -16,24 +19,23 @@ class NCargos{
         });
     }
     
-    static registrarCargo = (req,res, callback)=>{
+    registrarCargo(datosCargo, callback) {
         const hoy = new Date();
         const nuevoCargo = {
             fecha_inicio: hoy,
             vigente: 1,
-            miembro_id: req.body.miembro_id,
-            ministerio_id: req.body.ministerio_id
+            miembro_id: datosCargo.miembro_id,
+            ministerio_id: datosCargo.ministerio_id
         };
-        DCargos.registrarCargo(nuevoCargo, callback);
+        this.cargosDAO.registrarCargo(nuevoCargo, callback);
     }
 
-    static darDeBaja = (req,res, callback) =>{
-        const idCargo = req.body.id;
+    darDeBaja(idCargo, callback) {
         const fecha_fin = new Date();
-        DCargos.darDeBaja(idCargo, fecha_fin, callback);
+        this.cargosDAO.darDeBaja(idCargo, fecha_fin, callback);
     }
 
-    static formatoFecha(fecha) {
+    formatoFecha(fecha) {
         const dia = fecha.getDate();
         const mes = fecha.getMonth() + 1; 
         const anio = fecha.getFullYear();
@@ -45,8 +47,12 @@ class NCargos{
     }
 }
 
+// Instancia por defecto para mantener compatibilidad
+const cargosNegocio = new NCargos();
+
 module.exports = {
-    obtenerCargos: NCargos.obtenerCargos,
-    registrarCargo: NCargos.registrarCargo,
-    darDeBaja: NCargos.darDeBaja
+    NCargos,
+    obtenerCargos: (callback) => cargosNegocio.obtenerCargos(callback),
+    registrarCargo: (datosCargo, callback) => cargosNegocio.registrarCargo(datosCargo, callback),
+    darDeBaja: (idCargo, callback) => cargosNegocio.darDeBaja(idCargo, callback)
 }

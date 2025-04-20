@@ -93,7 +93,7 @@ Este es un proyecto de aplicación web desarrollado con Node.js, Express y EJS p
 ├── package.json        # Metadatos y dependencias del proyecto
 ├── datos/              # Capa de acceso a datos (interacción con la BD)
 │   ├── conexion.js     # Configuración de la conexión a la BD
-│   └── DB*.js          # Módulos específicos por entidad para operaciones CRUD
+│   └── D*.js          # Módulos específicos por entidad para operaciones CRUD
 ├── negocio/            # Capa de lógica de negocio
 │   └── N*.js           # Módulos con la lógica para cada entidad
 ├── presentacion/       # Capa de presentación (vistas EJS)

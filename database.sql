@@ -99,3 +99,55 @@ create table cargos (
         foreign key (ministerio_id) references ministerios(id)
         on delete restrict on update cascade -- no permitir borrar ministerio si tiene cargos
 ) engine=innodb default charset=utf8mb4;
+
+INSERT INTO parentesco (tipo_parentesco) VALUES
+('Padre'),
+('Madre'),
+('Hijo'),
+('Hija'),
+('Hermano'),
+('Hermana'),
+('Abuelo'),
+('Abuela'),
+('Nieto'),
+('Nieta'),
+('Tío'),
+('Tía'),
+('Sobrino'),
+('Sobrina'),
+('Primo'),
+('Prima'),
+('Padrastro'),
+('Madrastra'),
+('Hijastro'),
+('Hijastra'),
+('Suegro'),
+('Suegra'),
+('Yerno'),
+('Nuera'),
+('Cuñado'),
+('Cuñada');
+
+
+
+INSERT INTO ministerios (nombre) VALUES
+('Ministerio de Alabanza'),
+('Ministerio de Jóvenes'),
+('Ministerio de Niños'),
+('Ministerio de Mujeres'),
+('Ministerio de Hombres'),
+('Ministerio de Matrimonios'),
+('Ministerio de Intercesión'),
+('Ministerio de Evangelismo'),
+('Ministerio de Bienvenida'),
+('Ministerio de Discipulado'),
+('Ministerio de Medios y Comunicaciones'),
+('Ministerio de Ujieres'),
+('Ministerio de Misiones'),
+('Ministerio de Consejería'),
+('Ministerio de Danza'),
+('Ministerio de Teatro'),
+('Ministerio de Escuela Dominical'),
+('Ministerio de Ayuda Social'),
+('Ministerio de Enseñanza Bíblica'),
+('Ministerio de Sanidad Interior y Liberación');

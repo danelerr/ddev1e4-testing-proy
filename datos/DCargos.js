@@ -23,15 +23,17 @@ class DCargos{
         });
     }
 
-    static registrarCargo(nuevoCargo){
+    static registrarCargo(nuevoCargo, callback){
         const queryString = 'INSERT INTO cargos SET?';
-        conexion.connection.query(queryString,nuevoCargo,(error, results)=>{
+        conexion.connection.query(queryString, nuevoCargo, (error, results) => {
             if (error) {
                 console.error('Error al insertar datos: ', error);
+                if (callback) callback(error);
                 return;
             }
             console.log('Datos insertados correctamente: ', results);
-        })
+            if (callback) callback(null);
+        });
     }
 
     static darDeBaja(idCargo, fecha_fin, callback) {

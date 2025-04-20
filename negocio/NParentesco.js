@@ -1,9 +1,12 @@
 const DParentesco = require('../datos/DParentesco');
 
-class NParentesco{
+class NParentesco {
+    constructor(parentescoDAO = DParentesco) {
+        this.parentescoDAO = parentescoDAO;
+    }
     
-    static obtenerParentescos = (callback) => {
-        DParentesco.obtenerParentescos((error, parentescos) => {
+    obtenerParentescos(callback) {
+        this.parentescoDAO.obtenerParentescos((error, parentescos) => {
             if (error) {
                 callback(error, null);
                 return;
@@ -13,8 +16,8 @@ class NParentesco{
         });
     }
 
-    static obtenerTipoParentescos = (idTipo, callback) => {
-        DParentesco.obtenerParentesco(idTipo, (error, results) => {
+    obtenerTipoParentescos(idTipo, callback) {
+        this.parentescoDAO.obtenerParentesco(idTipo, (error, results) => {
             if (error) {
                 callback(error, null);
                 return;
@@ -26,7 +29,12 @@ class NParentesco{
     }
 }
 
+// Instancia por defecto para mantener compatibilidad
+const parentescoNegocio = new NParentesco();
+
 module.exports = {
-    obtenerParentescos: NParentesco.obtenerParentescos,
-    obtenerParentesco: NParentesco.obtenerTipoParentescos
+    NParentesco, // Exportamos la clase para poder hacer pruebas unitarias e inyección de dependencias
+    // Exportamos funciones para mantener la API existente
+    obtenerParentescos: (callback) => parentescoNegocio.obtenerParentescos(callback),
+    obtenerParentesco: (idTipo, callback) => parentescoNegocio.obtenerTipoParentescos(idTipo, callback)
 }

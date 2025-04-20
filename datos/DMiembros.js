@@ -26,22 +26,26 @@ class DMiembro{
         });
     }
     
-    static registrarMiembro(nuevoMiembro){
+    static registrarMiembro(nuevoMiembro, callback){
         const queryString = 'INSERT INTO miembros SET?';
-        conexion.connection.query(queryString,nuevoMiembro,(error, results)=>{
+        conexion.connection.query(queryString, nuevoMiembro, (error, results) => {
             if (error) {
-                return;
-              }
-        })
-    }
-    
-    static eliminarMiembro(idMiembro){
-        const queryString = 'DELETE FROM miembros WHERE id = ?';
-        conexion.connection.query(queryString,[idMiembro],(error, results) =>{
-            if(error){
+                if (callback) callback(error);
                 return;
             }
-        })
+            if (callback) callback(null);
+        });
+    }
+    
+    static eliminarMiembro(idMiembro, callback){
+        const queryString = 'DELETE FROM miembros WHERE id = ?';
+        conexion.connection.query(queryString, [idMiembro], (error, results) => {
+            if (error) {
+                if (callback) callback(error);
+                return;
+            }
+            if (callback) callback(null);
+        });
     }
 
     static obtenerHombres(callback){

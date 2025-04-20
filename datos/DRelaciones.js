@@ -21,13 +21,17 @@ class DRelaciones{
         });
     }
 
-    static registrarRelacion(nuevaRelacion){
+    static registrarRelacion(nuevaRelacion, callback){
         const queryString = 'INSERT INTO relaciones SET?';
-        conexion.connection.query(queryString,nuevaRelacion,(error, results)=>{
+        conexion.connection.query(queryString, nuevaRelacion, (error, results) => {
             if (error) {
+                console.error('Error al insertar relación:', error);
+                if (callback) callback(error);
                 return;
-              }
-        })
+            }
+            console.log('Relación insertada correctamente:', results);
+            if (callback) callback(null);
+        });
     }
 
 }

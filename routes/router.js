@@ -3,269 +3,356 @@ const router = express.Router()
 const path = require('path')
 
 //IMPORTACIONES DEL NEGOCIO
-const NegocioMiembro = require('../negocio/NMiembros');
-const NegocioBautizo = require('../negocio/NBautizos');
-const NegocioMatrimonio = require('../negocio/NMatrimonio');
-const NegocioCargo = require('../negocio/NCargos');
-const NegocioMinisterio = require('../negocio/NMinisterio');
-const NegocioRelacion = require('../negocio/NRelaciones');
-const NegocioParentesco = require('../negocio/NParentesco');
+const negocioMiembros = require('../negocio/NMiembros');
+const negocioBautizos = require('../negocio/NBautizos');
+const negocioMatrimonios = require('../negocio/NMatrimonio');
+const negocioCargos = require('../negocio/NCargos');
+const negocioMinisterios = require('../negocio/NMinisterio');
+const negocioRelaciones = require('../negocio/NRelaciones');
+const negocioParentesco = require('../negocio/NParentesco');
+
 //ENRUTAMIENTO DE VISTAS 
 router.get('/', (req, res)=>{
-    res.render('welcomePage');
+    res.render('welcomePage', { error: null });
 });
 
 //============================== MIEMBROS =================================
 router.get('/PMiembros',(req, res)=>{
-    NegocioMiembro.obtenerMiembros((error,miembros)=>{
+    negocioMiembros.obtenerMiembros((error, miembros)=>{
         if (error){
-            return res.status(500).send('Error al obtener los miembros');
+            return res.render('PMiembros', { NMiembros: [], error: 'Error al obtener los miembros' });
         }
-        res.render('PMiembros',{NMiembros: miembros});
+        res.render('PMiembros',{NMiembros: miembros, error: null});
     });
 });
 
 //ENRUTAMIENTO DE METODOS Y ACCIONES
 router.post('/NMiembros', (req,res)=>{
-    NegocioMiembro.registrarMiembro(req,res,(error)=>{
+    const datosMiembro = {
+        nombres: req.body.nombres,
+        apellidos: req.body.apellidos,
+        sexo: req.body.sexo,
+        fecha_nacimiento: req.body.fecha_nacimiento,
+        estado_civil: req.body.estado_civil,
+        ci: req.body.ci,
+        domicilio: req.body.domicilio,
+        celular: req.body.celular
+    };
+    
+    negocioMiembros.registrarMiembro(datosMiembro, (error)=>{
         if(error){
             return res.status(500).send('Error al registrar el miembro');
         }   
+        return res.redirect('/PMiembros');
     });
-    res.redirect('/PMiembros');
 });
 
 router.post('/eliminarMiembro', (req,res)=>{
-    NegocioMiembro.eliminarMiembro(req,res,(error)=>{
+    const idMiembro = req.body.id;
+    
+    negocioMiembros.eliminarMiembro(idMiembro, (error)=>{
         if(error){
             return res.status(500).send('Error al eliminar el miembro');
         }   
-    })
-    res.redirect('/PMiembros');
+        return res.redirect('/PMiembros');
+    });
 });
 
 //============================== BAUTIZOS =================================
 
 router.get('/PBautizos', (req, res) => {
-    NegocioBautizo.obtenerBautizos((error, bautizos) => {
+    negocioBautizos.obtenerBautizos((error, bautizos) => {
         if (error) {
-            res.status(500).send('Error al obtener los bautizos');
-            return;
+            return res.render('PBautizos', { bautizos: [], personas: [], error: 'Error al obtener los bautizos' });
         }
-        NegocioMiembro.obtenerMiembros((error,miembros)=>{
+        
+        negocioMiembros.obtenerMiembros((error, miembros) => {
             if (error){
-                return res.status(500).send('Error al obtener los miembros');
+                return res.render('PBautizos', { bautizos: bautizos || [], personas: [], error: 'Error al obtener los miembros' });
             }
-            for (let i = 0; i < bautizos.length; i++) {
-                const bautizo = bautizos[i];
-                for (let j = 0; j < miembros.length; j++) {
-                    const miembro = miembros[j];
+            
+            // Aseguramos que bautizos y miembros sean arrays válidos
+            const bautizosArray = Array.isArray(bautizos) ? bautizos : [];
+            const miembrosArray = Array.isArray(miembros) ? miembros : [];
+            
+            for (let i = 0; i < bautizosArray.length; i++) {
+                const bautizo = bautizosArray[i];
+                for (let j = 0; j < miembrosArray.length; j++) {
+                    const miembro = miembrosArray[j];
                     if (miembro.id === bautizo.miembro_id) {
                         bautizo.nombreMiembro = miembro.nombres;
                         break;
                     }
                 }
             }   
-            res.render('PBautizos', { bautizos: bautizos, personas: miembros});
             
+            res.render('PBautizos', { bautizos: bautizosArray, personas: miembrosArray, error: null });
         });
-        
     });
 });
 
 router.post('/NBautizos', (req,res)=>{
-    NegocioBautizo.registrarBautizo(req,res,(error)=>{
+    const datosBautizo = {
+        fecha: req.body.fecha,
+        miembro_id: req.body.miembro_id
+    };
+    
+    negocioBautizos.registrarBautizo(datosBautizo, (error)=>{
         if(error){
             return res.status(500).send('Error al registrar el bautizo');
         }   
+        return res.redirect('/PBautizos');
     });
-    res.redirect('/PBautizos');
 });
 
 router.post('/eliminarBautizo', (req,res)=>{
-    NegocioBautizo.eliminarBautizo(req,res,(error)=>{
+    const idBautizo = req.body.id;
+    
+    negocioBautizos.eliminarBautizo(idBautizo, (error)=>{
         if(error){
             return res.status(500).send('Error al eliminar el bautizo');
         }
-    })
-    res.redirect('/PBautizos');
+        return res.redirect('/PBautizos');
+    });
 });
 
 //============================== MATRIMONIOS =================================
 
 router.get('/PMatrimonios', (req, res) => {
-    NegocioMatrimonio.obtenerMatrimonios((error, matrimonios) => {
+    negocioMatrimonios.obtenerMatrimonios((error, matrimonios) => {
         if (error) {
-            res.status(500).send('Error al obtener los matrimonios');
-            return;
+            return res.render('PMatrimonios', { matrimonios: [], hombres: [], mujeres: [], error: 'Error al obtener los matrimonios' });
         }
-        matrimonios.forEach((matrimonio, index) => {
-            NegocioMiembro.obtenerNombre(matrimonio.novio_id, (error, nombreNovio) => {
+        
+        const matrimoniosArray = Array.isArray(matrimonios) ? matrimonios : [];
+        
+        matrimoniosArray.forEach((matrimonio, index) => {
+            negocioMiembros.obtenerNombre(matrimonio.novio_id, (error, nombreNovio) => {
                 if (error) {
-                    res.status(500).send('Error al obtener el nombre del novio');
-                    return;
+                    matrimoniosArray[index].nombreNovio = 'Desconocido';
+                } else {
+                    matrimoniosArray[index].nombreNovio = nombreNovio;
                 }
-                matrimonios[index].nombreNovio = nombreNovio;
 
-                NegocioMiembro.obtenerNombre(matrimonio.novia_id, (error, nombreNovia) => {
+                negocioMiembros.obtenerNombre(matrimonio.novia_id, (error, nombreNovia) => {
                     if (error) {
-                        res.status(500).send('Error al obtener el nombre del novio');
-                        return;
+                        matrimoniosArray[index].nombreNovia = 'Desconocido';
+                    } else {
+                        matrimoniosArray[index].nombreNovia = nombreNovia;
                     }
-                    matrimonios[index].nombreNovia = nombreNovia;
                 });
             });
         });
-        NegocioMiembro.obtenerHombres((error,hombres)=>{
+        
+        negocioMiembros.obtenerHombres((error, hombres) => {
+            const hombresArray = error ? [] : (Array.isArray(hombres) ? hombres : []);
+            
             if (error){
-                return res.status(500).send('Error al obtener los hombres');
+                console.error('Error al obtener los hombres:', error);
             }
-            NegocioMiembro.obtenerMujeres((error, mujeres)=>{
+            
+            negocioMiembros.obtenerMujeres((error, mujeres) => {
+                const mujeresArray = error ? [] : (Array.isArray(mujeres) ? mujeres : []);
+                
                 if(error){
-                    return res.status(500).send('Error al obtener los miembros');
+                    console.error('Error al obtener las mujeres:', error);
                 }
-                res.render('PMatrimonios', { matrimonios: matrimonios, hombres: hombres, mujeres: mujeres});
+                
+                res.render('PMatrimonios', { 
+                    matrimonios: matrimoniosArray, 
+                    hombres: hombresArray, 
+                    mujeres: mujeresArray,
+                    error: null
+                });
             });
         });  
     });
 });
 
 router.post('/NMatrimonios', (req,res)=>{
-    NegocioMatrimonio.registrarMatrimonio(req,res,(error)=>{
+    const datosMatrimonio = {
+        fecha: req.body.fecha,
+        novio_id: req.body.novio_id,
+        novia_id: req.body.novia_id
+    };
+    
+    negocioMatrimonios.registrarMatrimonio(datosMatrimonio, (error)=>{
         if(error){
             return res.status(500).send('Error al registrar el matrimonio');
         }   
+        return res.redirect('/PMatrimonios');
     });
-    res.redirect('/PMatrimonios');
 });
 
 router.post('/eliminarMatrimonio', (req,res)=>{
-    NegocioMatrimonio.eliminarMatrimonio(req,res,(error)=>{
+    const idMatrimonio = req.body.id;
+    
+    negocioMatrimonios.eliminarMatrimonio(idMatrimonio, (error)=>{
         if(error){
             return res.status(500).send('Error al eliminar el matrimonio');
         }   
-    })
-    res.redirect('/PMatrimonios');
+        return res.redirect('/PMatrimonios');
+    });
 });
 
 //============================== CARGOS  =================================
 
 router.get('/PCargos',(req, res)=>{
-    NegocioCargo.obtenerCargos((error,cargos)=>{
+    negocioCargos.obtenerCargos((error,cargos)=>{
         if (error){
-            return res.status(500).send('Error al obtener los miembros');
+            return res.render('PCargos', {cargos: [], miembros: [], ministerios: [], error: 'Error al obtener los cargos'});
         }
-        cargos.forEach((cargo, index) => {
-            NegocioMiembro.obtenerNombre(cargo.miembro_id, (error, nombre) => {
-                if (error) {
-                    res.status(500).send('Error al obtener el nombre de los miembros');
-                    return;
-                }
-                cargos[index].nombreMiembro = nombre;
-            });
-        })
         
-        cargos.forEach((cargo, index) => {
-            NegocioMinisterio.obtenerMinisterio(cargo.ministerio_id, (error, ministerio) => {
+        const cargosArray = Array.isArray(cargos) ? cargos : [];
+        
+        cargosArray.forEach((cargo, index) => {
+            negocioMiembros.obtenerNombre(cargo.miembro_id, (error, nombre) => {
                 if (error) {
-                    res.status(500).send('Error al obtener el nombre de los ministerios');
-                    return;
+                    cargosArray[index].nombreMiembro = 'Desconocido';
+                } else {
+                    cargosArray[index].nombreMiembro = nombre;
                 }
-                cargos[index].nombreMinisterio = ministerio;
             });
-        })
-
-        NegocioMiembro.obtenerMiembros((error,miembros)=>{
-            if (error){
-                return res.status(500).send('Error al obtener los miembros');
-            }
-            NegocioMinisterio.obtenerMinisterios((error,ministerios)=>{
-                if(error){
-                    return res.status(500).send('Error al obtener los ministerios');
+        });
+        
+        cargosArray.forEach((cargo, index) => {
+            negocioMinisterios.obtenerMinisterio(cargo.ministerio_id, (error, ministerio) => {
+                if (error) {
+                    cargosArray[index].nombreMinisterio = 'Desconocido';
+                } else {
+                    cargosArray[index].nombreMinisterio = ministerio;
                 }
-                res.render('PCargos', {cargos: cargos, miembros: miembros, ministerios: ministerios});
-            })
+            });
+        });
+
+        negocioMiembros.obtenerMiembros((error,miembros)=>{
+            const miembrosArray = error ? [] : (Array.isArray(miembros) ? miembros : []);
+            
+            if (error){
+                console.error('Error al obtener los miembros:', error);
+            }
+            
+            negocioMinisterios.obtenerMinisterios((error,ministerios)=>{
+                const ministeriosArray = error ? [] : (Array.isArray(ministerios) ? ministerios : []);
+                
+                if(error){
+                    console.error('Error al obtener los ministerios:', error);
+                }
+                
+                res.render('PCargos', {
+                    cargos: cargosArray, 
+                    miembros: miembrosArray, 
+                    ministerios: ministeriosArray,
+                    error: null
+                });
+            });
         });
     });
 });
 
 router.post('/NCargos', (req,res)=>{
-    NegocioCargo.registrarCargo(req,res,(error)=>{
+    const datosCargo = {
+        miembro_id: req.body.miembro_id,
+        ministerio_id: req.body.ministerio_id
+    };
+    
+    negocioCargos.registrarCargo(datosCargo, (error)=>{
         if(error){
             return res.status(500).send('Error al registrar el cargo');
         }   
+        return res.redirect('/PCargos');
     });
-    res.redirect('/PCargos');
 });
 
 router.post('/darDeBaja', (req,res)=>{
-    NegocioCargo.darDeBaja(req,res,(error)=>{
+    const idCargo = req.body.id;
+    
+    negocioCargos.darDeBaja(idCargo, (error)=>{
         if(error){
             return res.status(500).send('Error al dar de baja el cargo');
         }   
-    })
-    res.redirect('/PCargos');
+        return res.redirect('/PCargos');
+    });
 });
 
 //============================== RELACIONES =================================
 
 router.get('/PRelaciones',(req,res)=>{
-    NegocioRelacion.obtenerRelaciones((error,relaciones)=>{
+    negocioRelaciones.obtenerRelaciones((error,relaciones)=>{
         if (error){
-            return res.status(500).send('Error al obtener las relaciones');
+            return res.render('PRelaciones', {relaciones: [], miembros: [], parentescos: [], error: 'Error al obtener las relaciones'});
         }
-        relaciones.forEach((relacion) => {
-            NegocioMiembro.obtenerNombre(relacion.primer_miembro_id, (error, nombre) => {
+        
+        const relacionesArray = Array.isArray(relaciones) ? relaciones : [];
+        
+        relacionesArray.forEach((relacion) => {
+            negocioMiembros.obtenerNombre(relacion.primer_miembro_id, (error, nombre) => {
                 if (error) {
-                    res.status(500).send('Error al obtener el nombre del primer miembro');
-                    return;
+                    relacion.nombrePrimerMiembro = 'Desconocido';
+                } else {
+                    relacion.nombrePrimerMiembro = nombre;
                 }
-                relacion.nombrePrimerMiembro = nombre;
             });
-        })
+        });
 
-        relaciones.forEach((relacion) => {
-            NegocioMiembro.obtenerNombre(relacion.segundo_miembro_id, (error, nombre) => {
+        relacionesArray.forEach((relacion) => {
+            negocioMiembros.obtenerNombre(relacion.segundo_miembro_id, (error, nombre) => {
                 if (error) {
-                    res.status(500).send('Error al obtener el nombre del segundo miembro');
-                    return;
+                    relacion.nombreSegundoMiembro = 'Desconocido';
+                } else {
+                    relacion.nombreSegundoMiembro = nombre;
                 }
-                relacion.nombreSegundoMiembro = nombre;
             });
-        })
+        });
 
-        relaciones.forEach((relacion) => {
-            NegocioParentesco.obtenerParentesco(relacion.parentesco_id, (error, parentesco) => {
+        relacionesArray.forEach((relacion) => {
+            negocioParentesco.obtenerParentesco(relacion.parentesco_id, (error, parentesco) => {
                 if (error) {
-                    res.status(500).send('Error al obtener el nombre de los parentescos');
-                    return;
+                    relacion.tipoParentesco = 'Desconocido';
+                } else {
+                    relacion.tipoParentesco = parentesco;
                 }
-                relacion.tipoParentesco = parentesco;
             });
-        })
+        });
 
-        NegocioMiembro.obtenerMiembros((error,miembros)=>{
-            if (error){
-                return res.status(500).send('Error al obtener los miembros');
-            }
-            NegocioParentesco.obtenerParentescos((error,parentescos)=>{
-                if(error){
-                    return res.status(500).send('Error al obtener los parentescos');
-                }
-                res.render('PRelaciones', {relaciones: relaciones, miembros: miembros, parentescos: parentescos});
-            })
+        negocioMiembros.obtenerMiembros((error,miembros)=>{
+            const miembrosArray = error ? [] : (Array.isArray(miembros) ? miembros : []);
             
+            if (error){
+                console.error('Error al obtener los miembros:', error);
+            }
+            
+            negocioParentesco.obtenerParentescos((error,parentescos)=>{
+                const parentescosArray = error ? [] : (Array.isArray(parentescos) ? parentescos : []);
+                
+                if(error){
+                    console.error('Error al obtener los parentescos:', error);
+                }
+                
+                res.render('PRelaciones', {
+                    relaciones: relacionesArray, 
+                    miembros: miembrosArray, 
+                    parentescos: parentescosArray,
+                    error: null
+                });
+            });
         });
     });
-})
+});
 
 router.post('/NRelaciones', (req,res)=>{
-    NegocioRelacion.registrarRelacion(req,res,(error)=>{
+    const datosRelacion = {
+        primer_miembro_id: req.body.primer_miembro_id,
+        segundo_miembro_id: req.body.segundo_miembro_id,
+        parentesco_id: req.body.parentesco_id
+    };
+    
+    negocioRelaciones.registrarRelacion(datosRelacion, (error)=>{
         if(error){
             return res.status(500).send('Error al registrar la relación');
         }
+        return res.redirect('/PRelaciones');
     });
-    res.redirect('/PRelaciones');
 });
 
 module.exports = router

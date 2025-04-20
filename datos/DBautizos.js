@@ -20,26 +20,30 @@ class DBautizo{
         });
     }
 
-    static registrarBautizo(nuevoBautizo){
+    static registrarBautizo(nuevoBautizo, callback){
         const queryString = 'INSERT INTO bautizos SET?';
-        conexion.connection.query(queryString,nuevoBautizo,(error, results)=>{
+        conexion.connection.query(queryString, nuevoBautizo, (error, results) => {
             if (error) {
                 console.error('Error al insertar datos: ', error);
-                return;
-              }
-              console.log('Datos insertados correctamente: ', results);
-        })
-    }
-
-    static eliminarBautizo(idBautizo){
-        const queryString = 'DELETE FROM bautizos WHERE id = ?';
-        conexion.connection.query(queryString,[idBautizo],(error, results) =>{
-            if(error){
-                console.log('Error al eliminar el bautizo: ', error);
+                if (callback) callback(error);
                 return;
             }
-            console.log('miembro eliminado correctamente: ', results);
-        })
+            console.log('Datos insertados correctamente: ', results);
+            if (callback) callback(null);
+        });
+    }
+
+    static eliminarBautizo(idBautizo, callback){
+        const queryString = 'DELETE FROM bautizos WHERE id = ?';
+        conexion.connection.query(queryString, [idBautizo], (error, results) => {
+            if (error) {
+                console.log('Error al eliminar el bautizo: ', error);
+                if (callback) callback(error);
+                return;
+            }
+            console.log('Bautizo eliminado correctamente: ', results);
+            if (callback) callback(null);
+        });
     }
 }
 
