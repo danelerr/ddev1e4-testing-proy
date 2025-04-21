@@ -1,12 +1,12 @@
 const DRelaciones = require('../datos/DRelaciones');
 
 class NRelaciones {
-    constructor(relacionesDAO = DRelaciones) {
-        this.relacionesDAO = relacionesDAO;
+    constructor(relacionesDao = DRelaciones) {
+        this.relacionesDao = relacionesDao;
     }
 
     obtenerRelaciones(callback) {
-        this.relacionesDAO.obtenerRelaciones((error, relaciones) => {
+        this.relacionesDao.obtenerRelaciones((error, relaciones) => {
             if (error) {
                 callback(error, null);
                 return;
@@ -17,7 +17,7 @@ class NRelaciones {
     }
 
     registrarRelacion(datosRelacion, callback) {
-        this.relacionesDAO.registrarRelacion(datosRelacion, callback);
+        this.relacionesDao.registrarRelacion(datosRelacion, callback);
     }
 }
 

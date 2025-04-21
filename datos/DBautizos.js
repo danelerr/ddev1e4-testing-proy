@@ -1,5 +1,4 @@
 const conexion = require('../datos/conexion')
-conexion.crearConexion();
 
 class DBautizo{
     constructor(id, fecha, miembro_id){

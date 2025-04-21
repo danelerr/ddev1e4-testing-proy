@@ -1,12 +1,12 @@
 const DMatrimonios = require('../datos/DMatrimonios');
 
 class NMatrimonios {
-    constructor(matrimoniosDAO = DMatrimonios) {
-        this.matrimoniosDAO = matrimoniosDAO;
+    constructor(matrimoniosDao = DMatrimonios) {
+        this.matrimoniosDao = matrimoniosDao;
     }
 
     obtenerMatrimonios(callback) {
-        this.matrimoniosDAO.obtenerMatrimonios((error, matrimonios) => {
+        this.matrimoniosDao.obtenerMatrimonios((error, matrimonios) => {
             if (error) {
                 callback(error, null);
                 return;
@@ -20,17 +20,21 @@ class NMatrimonios {
     }
     
     registrarMatrimonio(datosMatrimonio, callback) {
-        this.matrimoniosDAO.registrarMatrimonio(datosMatrimonio, callback);
+        this.matrimoniosDao.registrarMatrimonio(datosMatrimonio, callback);
     }
     
     eliminarMatrimonio(idMatrimonio, callback) {
-        this.matrimoniosDAO.eliminarMatrimonio(idMatrimonio, callback);
+        this.matrimoniosDao.eliminarMatrimonio(idMatrimonio, callback);
     }
     
     formatoFecha(fecha) {
-        const dia = fecha.getDate();
-        const mes = fecha.getMonth() + 1; 
-        const anio = fecha.getFullYear();
+        // Crear una nueva fecha con el año, mes y día para evitar problemas de zona horaria
+        const fechaLocal = new Date(fecha.getFullYear(), fecha.getMonth(), fecha.getDate());
+        
+        // Ajustar para obtener el día correcto 
+        const dia = fechaLocal.getDate();
+        const mes = fechaLocal.getMonth() + 1; 
+        const anio = fechaLocal.getFullYear();
     
         const diaStr = (dia < 10) ? '0' + dia : dia;
         const mesStr = (mes < 10) ? '0' + mes : mes;

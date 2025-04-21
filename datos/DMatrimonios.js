@@ -1,5 +1,4 @@
 const conexion = require('../datos/conexion');
-conexion.crearConexion();
 
 class DMatrimonio{
     constructor(id, fecha, novio_id, novia_id){

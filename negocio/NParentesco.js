@@ -1,12 +1,12 @@
 const DParentesco = require('../datos/DParentesco');
 
 class NParentesco {
-    constructor(parentescoDAO = DParentesco) {
-        this.parentescoDAO = parentescoDAO;
+    constructor(parentescoDao = DParentesco) {
+        this.parentescoDao = parentescoDao;
     }
     
     obtenerParentescos(callback) {
-        this.parentescoDAO.obtenerParentescos((error, parentescos) => {
+        this.parentescoDao.obtenerParentescos((error, parentescos) => {
             if (error) {
                 callback(error, null);
                 return;
@@ -17,13 +17,18 @@ class NParentesco {
     }
 
     obtenerTipoParentescos(idTipo, callback) {
-        this.parentescoDAO.obtenerParentesco(idTipo, (error, results) => {
+        this.parentescoDao.obtenerParentesco(idTipo, (error, results) => {
             if (error) {
-                callback(error, null);
+                callback(error, undefined);
                 return;
             } else {
-                const tipo = results[0].tipo_parentesco
-                callback(null, tipo);
+                // Verificar si hay resultados antes de intentar acceder a ellos
+                if (results && results.length > 0) {
+                    const tipo = results[0].tipo_parentesco;
+                    callback(null, tipo);
+                } else {
+                    callback(null, undefined);
+                }
             }
         });
     }

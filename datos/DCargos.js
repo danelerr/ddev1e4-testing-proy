@@ -1,5 +1,5 @@
 const conexion = require('../datos/conexion')
-conexion.crearConexion();
+
 
 class DCargos{
     constructor(id, fecha_inicio, fecha_fin, vigente, miembro_id, ministerio_id){

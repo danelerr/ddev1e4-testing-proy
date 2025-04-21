@@ -1,5 +1,4 @@
 const conexion = require('../datos/conexion')
-conexion.crearConexion();
 
 class DRelaciones{
     constructor(id, primer_miembro_id, segundo_miembro_id, parentesco_id){

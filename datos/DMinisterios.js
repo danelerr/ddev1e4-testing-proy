@@ -1,5 +1,4 @@
 const conexion = require('../datos/conexion')
-conexion.crearConexion();
 
 class DMinisterio{
     constructor(id, nombre) {

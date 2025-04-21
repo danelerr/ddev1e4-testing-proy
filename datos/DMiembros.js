@@ -1,5 +1,4 @@
 const conexion = require('../datos/conexion')
-conexion.crearConexion();
 
 class DMiembro{
     constructor(id,nombres,apellidos,sexo,fecha_nacimiento,estado_civil,ci,domicilio,celular){

@@ -1,5 +1,4 @@
 const conexion = require('../datos/conexion')
-conexion.crearConexion();
 
 class DParentesco{
     constructor(id, tipo_parentesco){

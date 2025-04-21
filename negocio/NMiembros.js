@@ -1,14 +1,23 @@
-const DMiembros = require('../datos/DMiembros')
+const DMiembros = require('../datos/DMiembros');
+
+// Logger configurable para manejar mensajes de error
+const logger = {
+    log: (message, error) => {
+        if (process.env.NODE_ENV !== 'test') {
+            console.log(message, error);
+        }
+    }
+};
 
 class NMiembros {
-    constructor(miembrosDAO = DMiembros) {
-        this.miembrosDAO = miembrosDAO;
+    constructor(miembrosDao = DMiembros) {
+        this.miembrosDao = miembrosDao;
     }
     
     obtenerMiembros(callback) {
-        this.miembrosDAO.obtenerMiembros((error, miembros) => {
+        this.miembrosDao.obtenerMiembros((error, miembros) => {
             if (error) {
-                console.log('Error al obtener los miembros:', error);
+                logger.log('Error al obtener los miembros:', error);
                 callback(error, null);
                 return;
             } else {
@@ -18,9 +27,9 @@ class NMiembros {
     }
     
     registrarMiembro(datosMiembro, callback) {
-        this.miembrosDAO.registrarMiembro(datosMiembro, (error) => {
+        this.miembrosDao.registrarMiembro(datosMiembro, (error) => {
             if (error) {
-                console.log('Error al registrar miembro:', error);
+                logger.log('Error al registrar miembro:', error);
                 if (callback) callback(error);
                 return;
             }
@@ -29,9 +38,9 @@ class NMiembros {
     }
     
     eliminarMiembro(idMiembro, callback) {
-        this.miembrosDAO.eliminarMiembro(idMiembro, (error) => {
+        this.miembrosDao.eliminarMiembro(idMiembro, (error) => {
             if (error) {
-                console.log('Error al eliminar miembro:', error);
+                logger.log('Error al eliminar miembro:', error);
                 if (callback) callback(error);
                 return;
             }
@@ -40,7 +49,7 @@ class NMiembros {
     }
     
     obtenerHombres(callback) {
-        this.miembrosDAO.obtenerHombres((error, hombres) => {
+        this.miembrosDao.obtenerHombres((error, hombres) => {
             if (error) {
                 callback(error, null);
                 return;
@@ -51,7 +60,7 @@ class NMiembros {
     }
     
     obtenerMujeres(callback) {
-        this.miembrosDAO.obtenerMujeres((error, mujeres) => {
+        this.miembrosDao.obtenerMujeres((error, mujeres) => {
             if (error) {
                 callback(error, null);
                 return;
@@ -62,7 +71,7 @@ class NMiembros {
     }
     
     obtenerNombre(idMiembro, callback) {
-        this.miembrosDAO.obtenerNombre(idMiembro, (error, results) => {
+        this.miembrosDao.obtenerNombre(idMiembro, (error, results) => {
             if (error) {
                 callback(error, null);
                 return;
@@ -85,6 +94,6 @@ module.exports = {
     obtenerHombres: (callback) => miembrosNegocio.obtenerHombres(callback),
     obtenerMujeres: (callback) => miembrosNegocio.obtenerMujeres(callback),
     obtenerNombre: (idMiembro, callback) => miembrosNegocio.obtenerNombre(idMiembro, callback)
-}
+};
 
 

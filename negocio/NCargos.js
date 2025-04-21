@@ -1,12 +1,12 @@
 const DCargos = require('../datos/DCargos');
 
 class NCargos {
-    constructor(cargosDAO = DCargos) {
-        this.cargosDAO = cargosDAO;
+    constructor(cargosDao = DCargos) {
+        this.cargosDao = cargosDao;
     }
 
     obtenerCargos(callback) {
-        this.cargosDAO.obtenerCargos((error, cargos) => {
+        this.cargosDao.obtenerCargos((error, cargos) => {
             if (error) {
                 callback(error, null);
                 return;
@@ -27,18 +27,28 @@ class NCargos {
             miembro_id: datosCargo.miembro_id,
             ministerio_id: datosCargo.ministerio_id
         };
-        this.cargosDAO.registrarCargo(nuevoCargo, callback);
+        this.cargosDao.registrarCargo(nuevoCargo, (error) => {
+            // Cambiar null por undefined cuando no hay error
+            callback(error || undefined);
+        });
     }
 
     darDeBaja(idCargo, callback) {
         const fecha_fin = new Date();
-        this.cargosDAO.darDeBaja(idCargo, fecha_fin, callback);
+        this.cargosDao.darDeBaja(idCargo, fecha_fin, (error, results) => {
+            // Cambiar null por undefined cuando no hay error
+            callback(error || undefined);
+        });
     }
 
     formatoFecha(fecha) {
-        const dia = fecha.getDate();
-        const mes = fecha.getMonth() + 1; 
-        const anio = fecha.getFullYear();
+        // Crear una nueva fecha con el año, mes y día para evitar problemas de zona horaria
+        const fechaLocal = new Date(fecha.getFullYear(), fecha.getMonth(), fecha.getDate());
+        
+        // Ajustar para obtener el día correcto 
+        const dia = fechaLocal.getDate();
+        const mes = fechaLocal.getMonth() + 1; 
+        const anio = fechaLocal.getFullYear();
     
         const diaStr = (dia < 10) ? '0' + dia : dia;
         const mesStr = (mes < 10) ? '0' + mes : mes;

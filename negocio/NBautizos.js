@@ -1,12 +1,12 @@
 const DBautizos = require('../datos/DBautizos');
 
 class NBautizos {
-    constructor(bautizosDAO = DBautizos) {
-        this.bautizosDAO = bautizosDAO;
+    constructor(bautizosDao = DBautizos) {
+        this.bautizosDao = bautizosDao;
     }
     
     obtenerBautizos(callback) {
-        this.bautizosDAO.obtenerBautizos((error, bautizos) => {
+        this.bautizosDao.obtenerBautizos((error, bautizos) => {
             if (error) {
                 callback(error, null);
                 return;
@@ -20,17 +20,21 @@ class NBautizos {
     }
     
     registrarBautizo(datosBautizo, callback) {
-        this.bautizosDAO.registrarBautizo(datosBautizo, callback);
+        this.bautizosDao.registrarBautizo(datosBautizo, callback);
     }
     
     eliminarBautizo(idBautizo, callback) {
-        this.bautizosDAO.eliminarBautizo(idBautizo, callback);
+        this.bautizosDao.eliminarBautizo(idBautizo, callback);
     }
     
     formatoFecha(fecha) {
-        const dia = fecha.getDate();
-        const mes = fecha.getMonth() + 1; 
-        const anio = fecha.getFullYear();
+        // Crear una nueva fecha con el año, mes y día para evitar problemas de zona horaria
+        const fechaLocal = new Date(fecha.getFullYear(), fecha.getMonth(), fecha.getDate());
+        
+        // Ajustar para obtener el día correcto 
+        const dia = fechaLocal.getDate();
+        const mes = fechaLocal.getMonth() + 1; 
+        const anio = fechaLocal.getFullYear();
     
         const diaStr = (dia < 10) ? '0' + dia : dia;
         const mesStr = (mes < 10) ? '0' + mes : mes;

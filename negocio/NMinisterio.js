@@ -1,12 +1,12 @@
 const DMinisterios = require("../datos/DMinisterios");
 
 class NMinisterios {
-    constructor(ministeriosDAO = DMinisterios) {
-        this.ministeriosDAO = ministeriosDAO;
+    constructor(ministeriosDao = DMinisterios) {
+        this.ministeriosDao = ministeriosDao;
     }
 
     obtenerMinisterios(callback) {
-        this.ministeriosDAO.obtenerMinisterios((error, ministerios) => {
+        this.ministeriosDao.obtenerMinisterios((error, ministerios) => {
             if (error) {
                 callback(error, null);
                 return;
@@ -17,7 +17,7 @@ class NMinisterios {
     }
     
     obtenerMinisterio(idMinisterio, callback) {
-        this.ministeriosDAO.obtenerMinisterio(idMinisterio, (error, results) => {
+        this.ministeriosDao.obtenerMinisterio(idMinisterio, (error, results) => {
             if (error) {
                 callback(error, null);
                 return;
